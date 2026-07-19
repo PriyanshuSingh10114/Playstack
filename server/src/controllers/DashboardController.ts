@@ -1,0 +1,24 @@
+import { Request, Response, NextFunction } from 'express';
+import { dashboardService } from '../services/DashboardService';
+
+export class DashboardController {
+  async getStats(req: Request, res: Response, next: NextFunction) {
+    try {
+      const stats = await dashboardService.getStats();
+      res.status(200).json({ success: true, data: stats });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getCharts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const charts = await dashboardService.getCharts();
+      res.status(200).json({ success: true, data: charts });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+export const dashboardController = new DashboardController();
