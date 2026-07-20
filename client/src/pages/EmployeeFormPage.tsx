@@ -34,7 +34,7 @@ const EmployeeFormPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<EmployeeFormValues>({
-    resolver: zodResolver(employeeSchema),
+    resolver: zodResolver(employeeSchema) as any,
     defaultValues: {
       status: EmployeeStatus.ACTIVE,
       role: Role.EMPLOYEE,
@@ -69,8 +69,12 @@ const EmployeeFormPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       navigate('/employees');
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Something went wrong');
+    onError: (error: unknown) => {
+      if (error && typeof error === 'object' && 'response' in error) {
+        toast.error((error as any).response?.data?.message || 'Something went wrong');
+      } else {
+        toast.error('Something went wrong');
+      }
     },
     onSettled: () => {
       setIsSubmitting(false);

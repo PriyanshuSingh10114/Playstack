@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
-import { Types } from 'mongoose';
 import { Role } from '../types';
+import { Types } from 'mongoose';
 
 export interface JwtPayload {
   userId: string;
@@ -12,7 +12,7 @@ export const generateAccessToken = (userId: Types.ObjectId | string, role: Role)
   return jwt.sign(
     { userId: userId.toString(), role },
     env.JWT_SECRET,
-    { expiresIn: env.ACCESS_TOKEN_EXPIRY }
+    { expiresIn: env.ACCESS_TOKEN_EXPIRY } as any
   );
 };
 
@@ -20,7 +20,7 @@ export const generateRefreshToken = (userId: Types.ObjectId | string): string =>
   return jwt.sign(
     { userId: userId.toString() },
     env.JWT_REFRESH_SECRET,
-    { expiresIn: env.REFRESH_TOKEN_EXPIRY }
+    { expiresIn: env.REFRESH_TOKEN_EXPIRY } as any
   );
 };
 

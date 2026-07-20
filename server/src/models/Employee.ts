@@ -48,8 +48,8 @@ const EmployeeSchema: Schema = new Schema(
 
 // Indexes for searching and filtering
 EmployeeSchema.index({ name: 'text', email: 'text', employeeId: 'text' });
-EmployeeSchema.index({ department: 1 });
-EmployeeSchema.index({ status: 1 });
+EmployeeSchema.index({ department: 1, status: 1 }); // Compound index for filtering
 EmployeeSchema.index({ reportingManager: 1 });
+EmployeeSchema.index({ createdAt: -1 }); // Useful for default sorting
 
 export default mongoose.model<IEmployee>('Employee', EmployeeSchema);

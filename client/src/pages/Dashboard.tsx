@@ -12,8 +12,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   BarChart,
-  Bar,
-  Legend
+  Bar
 } from 'recharts';
 
 const fetchStats = async () => {

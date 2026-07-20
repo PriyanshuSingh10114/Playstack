@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: PeopleFlow EMS API
+  description: Enterprise Employee Management System API documentation
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Local development server
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+paths:
+  /auth/login:
+    post:
+      summary: Login user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Successful login
+        '401':
+          description: Invalid credentials
+  /employees:
+    get:
+      summary: Get all employees
+      tags:
+        - Employees
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of employees
+  /organization/tree:
+    get:
+      summary: Get organization hierarchy
+      tags:
+        - Organization
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Organization tree data

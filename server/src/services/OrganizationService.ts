@@ -1,10 +1,11 @@
 import { employeeRepository } from '../repositories/EmployeeRepository';
 import { IEmployee } from '../models/Employee';
+import { EmployeeStatus } from '../types';
 
 export class OrganizationService {
   async getOrganizationTree() {
     // Fetch all active employees
-    const employees = await employeeRepository.find({ status: 'ACTIVE' });
+    const employees = await employeeRepository.find({ status: EmployeeStatus.ACTIVE });
     
     // Convert to plain objects and create a map
     const empMap = new Map<string, any>();
@@ -36,7 +37,25 @@ export class OrganizationService {
   }
 
   async getDirectReports(managerId: string) {
-    return await employeeRepository.find({ reportingManager: managerId, status: 'ACTIVE' });
+    return await employeeRepository.find({ reportingManager: managerId, status: EmployeeStatus.ACTIVE });
+  }
+
+  async getAllDescendants(employeeId: string): Promise<string[]> {
+    const descendants: string[] = [];
+    const queue = [employeeId];
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      const reports = await this.getDirectReports(currentId);
+      
+      for (const report of reports) {
+        const reportId = report._id.toString();
+        descendants.push(reportId);
+        queue.push(reportId);
+      }
+    }
+
+    return descendants;
   }
 }
 

@@ -4,12 +4,11 @@ import api from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { Employee, Role } from '@/types';
+import { Plus, Search, Pencil, Trash2 } from 'lucide-react';
+import type { Employee } from '@/types';
+import { Role } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
-
-import { useNavigate } from 'react-router-dom';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -55,7 +54,7 @@ const Employees: React.FC = () => {
     const headers = ['Name', 'Email', 'Employee ID', 'Designation', 'Status'];
     const csvContent = [
       headers.join(','),
-      ...data.employees.map((e: any) => `${e.name},${e.email},${e.employeeId},${e.designation},${e.status}`)
+      ...data.employees.map((e: Employee) => `${e.name},${e.email},${e.employeeId},${e.designation},${e.status}`)
     ].join('\n');
     
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -145,7 +144,7 @@ const Employees: React.FC = () => {
                   </TableCell>
                   <TableCell className="text-muted-foreground">{employee.employeeId}</TableCell>
                   <TableCell>
-                    {(employee.department as any)?.name || 'N/A'}
+                    {typeof employee.department === 'object' && employee.department !== null ? employee.department.name : 'N/A'}
                   </TableCell>
                   <TableCell>{employee.designation}</TableCell>
                   <TableCell>

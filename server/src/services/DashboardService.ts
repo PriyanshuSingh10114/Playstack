@@ -1,10 +1,11 @@
 import { employeeRepository } from '../repositories/EmployeeRepository';
+import { EmployeeStatus } from '../types';
 
 export class DashboardService {
   async getStats() {
     const totalEmployees = await employeeRepository.count();
-    const activeEmployees = await employeeRepository.count({ status: 'ACTIVE' });
-    const inactiveEmployees = await employeeRepository.count({ status: 'INACTIVE' });
+    const activeEmployees = await employeeRepository.count({ status: EmployeeStatus.ACTIVE });
+    const inactiveEmployees = await employeeRepository.count({ status: EmployeeStatus.INACTIVE });
     
     // Simplistic aggregations. In real world we'd use mongoose aggregations
     // For demo purposes, we will return counts. We'd ideally count distinct departments.

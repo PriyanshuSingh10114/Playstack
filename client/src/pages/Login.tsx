@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-form'; // I will use react-hook-form
 import { useForm as useRHForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -36,8 +35,12 @@ const Login: React.FC = () => {
       login(res.data.data.user);
       toast.success('Logged in successfully');
       navigate('/dashboard');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Login failed');
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        toast.error((error as any).response?.data?.message || 'Login failed');
+      } else {
+        toast.error('Login failed');
+      }
     } finally {
       setIsLoading(false);
     }

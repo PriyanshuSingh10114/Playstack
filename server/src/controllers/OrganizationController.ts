@@ -11,7 +11,7 @@ export class OrganizationController {
     }
   }
 
-  async getDirectReports(req: Request, res: Response, next: NextFunction) {
+  async getDirectReports(req: Request<{ id: string }>, res: Response, next: NextFunction) {
     try {
       const reports = await organizationService.getDirectReports(req.params.id);
       res.status(200).json({ success: true, data: reports });

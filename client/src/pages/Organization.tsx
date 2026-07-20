@@ -4,7 +4,13 @@ import api from '@/lib/axios';
 import { ChevronDown, ChevronRight, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TreeNode = ({ node, level = 0 }: { node: any, level?: number }) => {
+import type { Employee } from '@/types';
+
+interface OrgNode extends Employee {
+  children?: OrgNode[];
+}
+
+const TreeNode = ({ node, level = 0 }: { node: OrgNode, level?: number }) => {
   const [isOpen, setIsOpen] = useState(true);
   const hasChildren = node.children && node.children.length > 0;
 
@@ -42,7 +48,7 @@ const TreeNode = ({ node, level = 0 }: { node: any, level?: number }) => {
             className="overflow-hidden"
           >
             <div className="ml-2">
-              {node.children.map((child: any) => (
+              {node.children?.map((child: OrgNode) => (
                 <TreeNode key={child._id} node={child} level={level + 1} />
               ))}
             </div>
@@ -76,7 +82,7 @@ const Organization: React.FC = () => {
           </div>
         ) : treeData && treeData.length > 0 ? (
           <div className="space-y-2">
-            {treeData.map((node: any) => (
+            {treeData.map((node: OrgNode) => (
               <TreeNode key={node._id} node={node} />
             ))}
           </div>

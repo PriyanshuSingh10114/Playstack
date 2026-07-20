@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
 import { Users, LayoutDashboard, Network, Settings, LogOut, Menu } from 'lucide-react';
@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 
 const MainLayout: React.FC = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const navItems = [

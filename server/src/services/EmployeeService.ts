@@ -4,9 +4,14 @@ import { AppError } from '../utils/errors';
 import { IEmployee } from '../models/Employee';
 import { Role } from '../types';
 import bcrypt from 'bcrypt';
+import { organizationService } from './OrganizationService';
 
 export class EmployeeService {
   async createEmployee(data: Partial<IEmployee> & { password?: string, role?: Role }, creatorId: string) {
+    if (!data.employeeId) {
+      throw new AppError('Employee ID is required', 400);
+    }
+
     const existingEmployee = await employeeRepository.findOne({ employeeId: data.employeeId });
     if (existingEmployee) {
       throw new AppError('Employee ID already exists', 400);
@@ -73,6 +78,17 @@ export class EmployeeService {
   async updateEmployee(id: string, data: Partial<IEmployee>, updaterId: string) {
     const employee = await employeeRepository.findById(id);
     if (!employee) throw new AppError('Employee not found', 404);
+
+    if (data.reportingManager) {
+      if (data.reportingManager.toString() === id) {
+        throw new AppError('An employee cannot report to themselves', 400);
+      }
+      
+      const descendants = await organizationService.getAllDescendants(id);
+      if (descendants.includes(data.reportingManager.toString())) {
+        throw new AppError('Circular reporting dependency detected', 400);
+      }
+    }
 
     const updatedData = { ...data, updatedBy: updaterId };
     return await employeeRepository.update(id, updatedData as any);

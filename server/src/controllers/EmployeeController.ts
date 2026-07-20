@@ -22,7 +22,7 @@ export class EmployeeController {
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction) {
+  async getById(req: Request<{ id: string }>, res: Response, next: NextFunction) {
     try {
       const employee = await employeeService.getEmployeeById(req.params.id);
       res.status(200).json({ success: true, data: employee });
@@ -31,7 +31,7 @@ export class EmployeeController {
     }
   }
 
-  async update(req: AuthRequest, res: Response, next: NextFunction) {
+  async update(req: AuthRequest & { params: { id: string } }, res: Response, next: NextFunction) {
     try {
       const updaterId = req.user!.userId;
       const employee = await employeeService.updateEmployee(req.params.id, req.body, updaterId);
@@ -41,7 +41,7 @@ export class EmployeeController {
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction) {
+  async delete(req: Request<{ id: string }>, res: Response, next: NextFunction) {
     try {
       await employeeService.softDeleteEmployee(req.params.id);
       res.status(200).json({ success: true, message: 'Employee deleted successfully' });
