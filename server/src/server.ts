@@ -21,6 +21,24 @@ app.use(cors({
   credentials: true,
 }));
 
+// Parsing Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(morgan('dev'));
+
+// Express 5.x workaround for sanitizers (req.query is a getter by default)
+app.use((req, res, next) => {
+  const originalQuery = req.query;
+  Object.defineProperty(req, 'query', {
+    value: { ...originalQuery },
+    writable: true,
+    configurable: true,
+    enumerable: true
+  });
+  next();
+});
+
 // Sanitization
 app.use(mongoSanitize());
 app.use(xss());
@@ -31,12 +49,6 @@ const limiter = rateLimit({
   max: 100 // limit each IP to 100 requests per windowMs
 });
 app.use('/api', limiter);
-
-// Parsing Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(morgan('dev'));
 
 import employeeRoutes from './routes/employee.routes';
 
