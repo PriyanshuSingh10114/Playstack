@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://via.placeholder.com/150/000000/FFFFFF/?text=PeopleFlow" alt="PeopleFlow Logo" width="150" height="150">
   
   <h1>PeopleFlow EMS</h1>
   
